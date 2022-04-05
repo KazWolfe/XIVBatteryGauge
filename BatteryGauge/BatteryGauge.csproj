@@ -1,0 +1,87 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Product>Battery Gauge</Product>
+        <Authors>Kaz Wolfe</Authors>
+        <Company>Blacksite Technologies</Company>
+        <Version>0.0.1</Version>
+
+        <AssemblyName>BatteryGauge</AssemblyName>
+
+        <Description>A Dalamud plugin that shows battery information in-game.</Description>
+        <Copyright>(c) 2022, KazWolfe</Copyright>
+        <IsPackable>false</IsPackable>
+        <NeutralLanguage>en</NeutralLanguage>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Target">
+        <PlatformTarget>x64</PlatformTarget>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <LangVersion>10</LangVersion>
+        <Platforms>x64</Platforms>
+        <Configurations>Debug;Release</Configurations>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Build">
+        <OutputType>Library</OutputType>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendPlatformToOutputPath>false</AppendPlatformToOutputPath>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
+    <PropertyGroup Label="Feature">
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="DalamudPackager" Version="2.1.5" />
+        <PackageReference Include="ILRepack" Version="2.1.0-beta1" GeneratePathProperty="true" />
+        <Reference Include="Newtonsoft.Json">
+            <HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Dalamud">
+            <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="ImGui.NET">
+            <HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="ImGuiScene">
+            <HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+
+    <!-- Build steps -->
+    <Target Name="ILRepack" AfterTargets="Build">
+        <ItemGroup>
+            <InputAssemblies Include="$(TargetPath)" />
+            <InputAssemblies Include="$(TargetDir)*.dll" Exclude="$(TargetPath)" />
+        </ItemGroup>
+        <Exec Command="$(PkgILRepack)\tools\ILRepack.exe /lib:$(DalamudLibPath) /lib:$(TargetDir) /out:$(TargetDir)$(TargetFileName) @(InputAssemblies, ' ')" />
+    </Target>
+
+    <Target Name="CleanOutDir" AfterTargets="ILRepack">
+        <ItemGroup>
+            <DeleteAssemblies Include="$(TargetDir)*.dll" Exclude="$(TargetPath)" />
+        </ItemGroup>
+        <Message Text="Deleting @(DeleteAssemblies)" Importance="high" />
+        <Delete Files="@(DeleteAssemblies)" />
+    </Target>
+
+    <Target Name="PackagePlugin" AfterTargets="CleanOutDir" Condition="'$(Configuration)' == 'Release'">
+        <DalamudPackager ProjectDir="$(ProjectDir)" OutputPath="$(OutputPath)" AssemblyName="$(AssemblyName)" MakeZip="true" />
+    </Target>
+
+</Project>
