@@ -32,15 +32,9 @@ public class BatteryGauge : IDalamudPlugin {
         this.PluginInterface.UiBuilder.OpenConfigUi += this.DrawConfigUI;
 
         this.BatteryDtrBar = new BatteryDtrBar();
-        
-        // This is lazy, but at least on my system it stays below 0.02ms at worst so I'm not too concerned about the
-        // performance impact.
-        Injections.Framework.Update += this.UpdateDtrBar;
     }
 
     public void Dispose() {
-        Injections.Framework.Update -= this.UpdateDtrBar;
-        
         this.BatteryDtrBar.Dispose();
         this.WindowSystem.RemoveAllWindows();
 
@@ -54,9 +48,5 @@ public class BatteryGauge : IDalamudPlugin {
         if (instance == null) {
             this.WindowSystem.AddWindow(new SettingsWindow());
         }
-    }
-
-    private void UpdateDtrBar(Framework _) {
-        this.BatteryDtrBar.UpdateBarEntry();
     }
 }

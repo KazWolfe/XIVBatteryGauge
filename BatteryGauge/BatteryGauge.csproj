@@ -63,6 +63,13 @@
         </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+        <Content Include="..\Assets\icon.png">
+            <Link>images\icon.png</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
     <!-- Build steps -->
     <Target Name="ILRepack" AfterTargets="Build">
         <ItemGroup>
