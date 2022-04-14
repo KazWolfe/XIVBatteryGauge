@@ -9,7 +9,7 @@ namespace BatteryGauge;
 public class BatteryGauge : IDalamudPlugin {
     public static BatteryGauge Instance = null!;
     
-    public string Name => "Battery Gauge";
+    public string Name => "BatteryGauge";
     
     public DalamudPluginInterface PluginInterface { get; init; }
     public PluginConfig Configuration { get; init; }
