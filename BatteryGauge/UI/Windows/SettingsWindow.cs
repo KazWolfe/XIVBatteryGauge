@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using BatteryGauge.Base;
 using BatteryGauge.Battery;
@@ -12,7 +13,21 @@ namespace BatteryGauge.UI.Windows;
 
 public class SettingsWindow : Window {
     public const string WindowKey = "BatteryGauge Settings";
-    
+
+    private static readonly Dictionary<ChargingDisplayMode, string> ChargingDisplayModeStrings = new() {
+        {ChargingDisplayMode.Hide, "Hide"},
+        {ChargingDisplayMode.PercentageOnly, "Show Percentage Only"},
+        {ChargingDisplayMode.TextOnly, "Show \"Charging\" Only"},
+        {ChargingDisplayMode.TextPercentage, "Show \"Charging\" and Percentage"}
+    };
+
+    private static readonly Dictionary<DischargingDisplayMode, string> DischargingDisplayModeStrings = new() {
+        {DischargingDisplayMode.Hide, "Hide"},
+        {DischargingDisplayMode.PercentageOnly, "Show Percentage Only"},
+        {DischargingDisplayMode.RuntimeOnly, "Show Runtime Only"},
+        {DischargingDisplayMode.PercentageRuntime, "Show Percentage and Runtime"}
+    };
+
     private readonly BatteryGauge _plugin = BatteryGauge.Instance;
     private readonly PluginConfig _config = BatteryGauge.Instance.Configuration;
 
@@ -22,7 +37,7 @@ public class SettingsWindow : Window {
         this.SizeCondition = ImGuiCond.FirstUseEver;
         this.SizeConstraints = new WindowSizeConstraints {
             MinimumSize = new Vector2(350, 250),
-            MaximumSize = new Vector2(450, 400)
+            MaximumSize = new Vector2(350, 250)
         };
         this.Size = this.SizeConstraints.Value.MinimumSize;
     }
@@ -46,10 +61,10 @@ public class SettingsWindow : Window {
         }
 
         /* Selector Content */
-        if (ImGui.BeginCombo("Charge Mode", Enum.GetName(this._config.ChargingDisplayMode))) {
+        if (ImGui.BeginCombo("Charge Mode", ChargingDisplayModeStrings[this._config.ChargingDisplayMode])) {
             foreach (var mode in Enum.GetValues<ChargingDisplayMode>()) {
                 var selected = (mode == this._config.ChargingDisplayMode);
-                if (ImGui.Selectable(Enum.GetName(mode), selected)) {
+                if (ImGui.Selectable(ChargingDisplayModeStrings[mode], selected)) {
                     this._config.ChargingDisplayMode = mode;
                     this._config.Save();
                 }
@@ -66,10 +81,10 @@ public class SettingsWindow : Window {
 
         ImGui.Dummy(new Vector2(0, 10));
         
-        if (ImGui.BeginCombo("Discharge Mode", Enum.GetName(this._config.DischargingDisplayMode))) {
+        if (ImGui.BeginCombo("Discharge Mode", DischargingDisplayModeStrings[this._config.DischargingDisplayMode])) {
             foreach (var mode in Enum.GetValues<DischargingDisplayMode>()) {
                 var selected = (mode == this._config.DischargingDisplayMode);
-                if (ImGui.Selectable(Enum.GetName(mode), selected)) {
+                if (ImGui.Selectable(DischargingDisplayModeStrings[mode], selected)) {
                     this._config.DischargingDisplayMode = mode;
                     this._config.Save();
                 }

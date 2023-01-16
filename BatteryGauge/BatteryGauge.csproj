@@ -3,7 +3,7 @@
         <Product>Battery Gauge</Product>
         <Authors>Kaz Wolfe</Authors>
         <Company>Blacksite Technologies</Company>
-        <Version>0.0.3</Version>
+        <Version>1.0.0</Version>
 
         <AssemblyName>BatteryGauge</AssemblyName>
 
