@@ -1,19 +1,20 @@
-﻿using BatteryGauge.Base;
+﻿using System;
+using BatteryGauge.Base;
 using BatteryGauge.UI;
 using BatteryGauge.UI.Windows;
-using Dalamud.Game;
+using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 
 namespace BatteryGauge;
 
 public class BatteryGauge : IDalamudPlugin {
-    public static BatteryGauge Instance = null!;
+    internal static BatteryGauge Instance = null!;
     
     public string Name => "BatteryGauge";
     
     public DalamudPluginInterface PluginInterface { get; init; }
     public PluginConfig Configuration { get; init; }
-    public PatchedWindowSystem WindowSystem { get; init; }
+    public WindowSystem WindowSystem { get; init; }
 
     private BatteryDtrBar BatteryDtrBar { get; init; }
     
@@ -27,10 +28,10 @@ public class BatteryGauge : IDalamudPlugin {
         this.Configuration = this.PluginInterface.GetPluginConfig() as PluginConfig ?? new PluginConfig();
         this.Configuration.Initialize(this.PluginInterface);
 
-        this.WindowSystem = new PatchedWindowSystem(this.Name);
+        this.WindowSystem = new WindowSystem(this.Name);
         this.PluginInterface.UiBuilder.Draw += this.WindowSystem.Draw;
         this.PluginInterface.UiBuilder.OpenConfigUi += this.DrawConfigUI;
-
+        
         this.BatteryDtrBar = new BatteryDtrBar();
     }
 
@@ -40,6 +41,8 @@ public class BatteryGauge : IDalamudPlugin {
 
         this.PluginInterface.UiBuilder.OpenConfigUi -= this.DrawConfigUI;
         this.PluginInterface.UiBuilder.Draw -= this.WindowSystem.Draw;
+
+        GC.SuppressFinalize(this);
     }
 
     private void DrawConfigUI() {

@@ -9,15 +9,14 @@ using Dalamud.Game.Gui.Dtr;
 namespace BatteryGauge.UI;
 
 public class BatteryDtrBar : IDisposable {
-    private const int BatteryPollMillis = 250;
+    private const int BatteryPollMillis = 5_000;
     private const string DtrBarTitle = "BatteryGauge";
     
     private readonly DtrBarEntry? _barEntry;
     private readonly CancellationTokenSource _ts = new();
     private readonly CancellationToken _token;
-    private readonly Task _watcherTask;
 
-    private static PluginConfig _pluginConfig = BatteryGauge.Instance.Configuration;
+    private static readonly PluginConfig _pluginConfig = BatteryGauge.Instance.Configuration;
 
     public BatteryDtrBar() {
         this._barEntry = Injections.DtrBar.Get(DtrBarTitle);
@@ -33,7 +32,7 @@ public class BatteryDtrBar : IDisposable {
 
         this._token = this._ts.Token;
         
-        this._watcherTask = Task.Run(async () => {
+        Task.Run(async () => {
             while (!this._token.IsCancellationRequested) {
                 this.UpdateBarEntry();
 
@@ -90,7 +89,6 @@ public class BatteryDtrBar : IDisposable {
 
     public void Dispose() {
         this._ts.Cancel();
-        this._watcherTask.Dispose();
         this._barEntry?.Dispose();
 
         GC.SuppressFinalize(this);

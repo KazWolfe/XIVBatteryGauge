@@ -19,8 +19,12 @@ public class SettingsWindow : Window {
     public SettingsWindow() : base(WindowKey, ImGuiWindowFlags.None, true) {
         this.IsOpen = true;
 
-        this.Size = new Vector2(400, 200);
-        this.SizeCondition = ImGuiCond.Appearing;
+        this.SizeCondition = ImGuiCond.FirstUseEver;
+        this.SizeConstraints = new WindowSizeConstraints {
+            MinimumSize = new Vector2(350, 250),
+            MaximumSize = new Vector2(450, 400)
+        };
+        this.Size = this.SizeConstraints.Value.MinimumSize;
     }
 
     public override void OnOpen() {
@@ -76,16 +80,15 @@ public class SettingsWindow : Window {
             }
             ImGui.EndCombo();
         }
-        
-        /* Debug Data */
-#if DEBUG
-        ImGui.Dummy(new Vector2(0, 10));
 
-        ImGui.Text($"Battery Percentage: {SystemPower.ChargePercentage}%");
-        ImGui.Text($"Limetime (sec): {SystemPower.LifetimeSeconds}");
-        ImGui.Text($"Charging: {SystemPower.IsCharging}");
-        ImGui.Text($"Has Battery: {SystemPower.HasBattery}");
-#endif
+        if (Injections.PluginInterface.IsDev || Injections.PluginInterface.IsDevMenuOpen) {
+            ImGui.Dummy(new Vector2(0, 10));
+
+            ImGui.Text($"Battery Percentage: {SystemPower.ChargePercentage}%");
+            ImGui.Text($"Limetime (sec): {SystemPower.LifetimeSeconds}");
+            ImGui.Text($"Charging: {SystemPower.IsCharging}");
+            ImGui.Text($"Has Battery: {SystemPower.HasBattery}");
+        }
     }
     
 }

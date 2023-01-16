@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace BatteryGauge.Battery; 
 
-public class SystemPower {
+public static class SystemPower {
     [DllImport("kernel32.dll", SetLastError = true)]
     private static extern bool GetSystemPowerStatus(out SystemPowerStatus sps);
     
