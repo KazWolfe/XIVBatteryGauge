@@ -7,10 +7,7 @@ Battery Gauge is a very simple plugin: all it does is add a new entry to your Se
 Info Bar that contains your device's current battery percentage and (if not plugged
 in), how much longer your battery will last. 
 
-This plugin will eventually have some config options to allow you to customize how
-your battery information will look, but for now everyone gets the same experience.
-
-## Installing the Plugin
-
-Wait for it to hit Dalamud testing, please :)
-
+This plugin is a demo plugin, and is therefore in maintenance-only mode. It is very
+unlikely that BatteryGauge will receive new features or UI polish, although bugs 
+will be fixed. If you want to contribute new features, however, I won't turn them 
+down!
