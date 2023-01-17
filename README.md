@@ -1,5 +1,7 @@
 # 🔋 BatteryGauge
 
+[![Download Count](https://img.shields.io/endpoint?url=https://vz32sgcoal.execute-api.us-east-1.amazonaws.com/BatteryGauge)](https://github.com/KazWolfe/XIVBatteryGauge)
+
 Hey, you! Yes, you! Do you play FFXIV on your laptop? Or your Steam Deck? Doesn't it
 just *suck* when your battery dies? This is just the plugin for you!
 
