@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BatteryGauge.Base;
 using BatteryGauge.UI;
 using BatteryGauge.UI.Windows;
@@ -46,9 +47,9 @@ public class BatteryGauge : IDalamudPlugin {
     }
 
     private void DrawConfigUI() {
-        var instance = this.WindowSystem.GetWindow(SettingsWindow.WindowKey);
+        var instance = this.WindowSystem.Windows.Any(window => window.WindowName == SettingsWindow.WindowKey);
         
-        if (instance == null) {
+        if (!instance) {
             this.WindowSystem.AddWindow(new SettingsWindow());
         }
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using Dalamud.Configuration;
-using Dalamud.Logging;
 using Dalamud.Plugin;
 
 namespace BatteryGauge.Base;
@@ -37,7 +36,7 @@ public class PluginConfig : IPluginConfiguration {
     }
 
     public void Save() {
-        PluginLog.Debug("Saving config");
+        Injections.PluginLog.Debug("Saving config");
         this._pluginInterface!.SavePluginConfig(this);
     }
 }
