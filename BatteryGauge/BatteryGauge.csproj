@@ -3,7 +3,7 @@
         <Product>Battery Gauge</Product>
         <Authors>Kaz Wolfe</Authors>
         <Company>Blacksite Technologies</Company>
-        <Version>1.1.0</Version>
+        <Version>1.1.1</Version>
         <AssemblyName>BatteryGauge</AssemblyName>
         <Description>A Dalamud plugin that shows battery information in-game.</Description>
         <Copyright>(c) 2023, KazWolfe</Copyright>

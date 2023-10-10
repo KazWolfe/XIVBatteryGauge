@@ -31,7 +31,7 @@ public class BatteryDtrBar : IDisposable {
                 this._barEntry.Shown = false;
             }
         }
-        
+
         Task.Run(async () => {
             while (!this._ts.Token.IsCancellationRequested) {
                 this.UpdateBarEntry();
@@ -63,13 +63,13 @@ public class BatteryDtrBar : IDisposable {
         }
 
         if (SystemPower.IsCharging) {
-            if (SystemPower.ChargePercentage == 100 && _pluginConfig.HideWhenFull) {
+            if (SystemPower.ChargePercentage == 100 && this._pluginConfig.HideWhenFull) {
                 this._barEntry.Text = "";
                 this._barEntry.Tooltip = "Battery fully charged.";
                 return;
             }
 
-            this._barEntry.Text = _pluginConfig.ChargingDisplayMode switch {
+            this._barEntry.Text = this._pluginConfig.ChargingDisplayMode switch {
                 ChargingDisplayMode.Hide => "",
                 ChargingDisplayMode.PercentageOnly => $"{SystemPower.ChargePercentage}%",
                 ChargingDisplayMode.TextOnly => "Charging",
@@ -81,7 +81,7 @@ public class BatteryDtrBar : IDisposable {
         } else {
             var lifetime = TimeUtil.GetPrettyTimeFormat(SystemPower.LifetimeSeconds);
 
-            this._barEntry.Text = _pluginConfig.DischargingDisplayMode switch {
+            this._barEntry.Text = this._pluginConfig.DischargingDisplayMode switch {
                 DischargingDisplayMode.Hide => "",
                 DischargingDisplayMode.PercentageOnly => $"{SystemPower.ChargePercentage}%",
                 DischargingDisplayMode.RuntimeOnly => lifetime,
@@ -89,9 +89,9 @@ public class BatteryDtrBar : IDisposable {
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-            this._barEntry.Text = $"Battery is discharging.\n" +
-                                  $"Current percentage: {SystemPower.ChargePercentage}%\n" +
-                                  $"Remaining life: {lifetime}";
+            this._barEntry.Tooltip = $"Battery is discharging.\n" +
+                                     $"Current percentage: {SystemPower.ChargePercentage}%\n" +
+                                     $"Remaining life: {lifetime}";
         }
     }
 
