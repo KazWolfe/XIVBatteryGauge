@@ -5,21 +5,23 @@ using BatteryGauge.Base;
 using BatteryGauge.Battery;
 using BatteryGauge.Util;
 using Dalamud.Game.Gui.Dtr;
+using Dalamud.Plugin.Services;
 
 namespace BatteryGauge.UI;
 
 public class BatteryDtrBar : IDisposable {
     private const int BatteryPollMillis = 5_000;
     private const string DtrBarTitle = "BatteryGauge";
-    
+
     private readonly DtrBarEntry? _barEntry;
     private readonly CancellationTokenSource _ts = new();
-    private readonly CancellationToken _token;
 
-    private static readonly PluginConfig _pluginConfig = BatteryGauge.Instance.Configuration;
+    private readonly PluginConfig _pluginConfig;
 
-    public BatteryDtrBar() {
-        this._barEntry = Injections.DtrBar.Get(DtrBarTitle);
+    public BatteryDtrBar(PluginConfig config, IDtrBar dtrBar) {
+        this._pluginConfig = config;
+
+        this._barEntry = dtrBar.Get(DtrBarTitle);
 
         if (this._barEntry != null) {
             this._barEntry.Text = "Measuring...";
@@ -29,21 +31,19 @@ public class BatteryDtrBar : IDisposable {
                 this._barEntry.Shown = false;
             }
         }
-
-        this._token = this._ts.Token;
         
         Task.Run(async () => {
-            while (!this._token.IsCancellationRequested) {
+            while (!this._ts.Token.IsCancellationRequested) {
                 this.UpdateBarEntry();
 
-                await Task.Delay(BatteryPollMillis, this._token);
+                await Task.Delay(BatteryPollMillis, this._ts.Token);
             }
-        }, this._token);
+        }, this._ts.Token);
     }
 
     private void UpdateBarEntry() {
         if (this._barEntry == null) return;
-        
+
         if (!this._barEntry.Shown) {
             // Handle an edge case where a battery is added *after* the game initializes.
             // I don't know why this would realistically happen, but it came up in UPS testing. 
@@ -53,20 +53,22 @@ public class BatteryDtrBar : IDisposable {
                 return;
             }
         }
-        
+
         // Handle an edge case where the battery *did* exist at initialization but no longer exists somehow.
         // Again, came up in UPS testing. Also probably if the battery catastrophically fails.
         if (!SystemPower.HasBattery) {
             this._barEntry.Text = "Battery Error";
+            this._barEntry.Tooltip = "A battery was not detected, or it has failed.";
             return;
         }
 
         if (SystemPower.IsCharging) {
             if (SystemPower.ChargePercentage == 100 && _pluginConfig.HideWhenFull) {
                 this._barEntry.Text = "";
+                this._barEntry.Tooltip = "Battery fully charged.";
                 return;
             }
-            
+
             this._barEntry.Text = _pluginConfig.ChargingDisplayMode switch {
                 ChargingDisplayMode.Hide => "",
                 ChargingDisplayMode.PercentageOnly => $"{SystemPower.ChargePercentage}%",
@@ -74,6 +76,8 @@ public class BatteryDtrBar : IDisposable {
                 ChargingDisplayMode.TextPercentage => $"Charging ({SystemPower.ChargePercentage}%)",
                 _ => throw new ArgumentOutOfRangeException()
             };
+
+            this._barEntry.Tooltip = $"Battery is charging.\nCurrent percentage: {SystemPower.ChargePercentage}%";
         } else {
             var lifetime = TimeUtil.GetPrettyTimeFormat(SystemPower.LifetimeSeconds);
 
@@ -84,6 +88,10 @@ public class BatteryDtrBar : IDisposable {
                 DischargingDisplayMode.PercentageRuntime => $"{SystemPower.ChargePercentage}% ({lifetime})",
                 _ => throw new ArgumentOutOfRangeException()
             };
+
+            this._barEntry.Text = $"Battery is discharging.\n" +
+                                  $"Current percentage: {SystemPower.ChargePercentage}%\n" +
+                                  $"Remaining life: {lifetime}";
         }
     }
 

@@ -5,35 +5,33 @@ using BatteryGauge.UI;
 using BatteryGauge.UI.Windows;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
 
 namespace BatteryGauge;
 
 public class BatteryGauge : IDalamudPlugin {
-    internal static BatteryGauge Instance = null!;
-    
-    public string Name => "BatteryGauge";
-    
     public DalamudPluginInterface PluginInterface { get; init; }
     public PluginConfig Configuration { get; init; }
     public WindowSystem WindowSystem { get; init; }
 
     private BatteryDtrBar BatteryDtrBar { get; init; }
-    
+    private readonly SettingsWindow _settingsWindow;
 
-    public BatteryGauge(DalamudPluginInterface pluginInterface) {
+    public BatteryGauge(DalamudPluginInterface pluginInterface, IDtrBar dtrBar) {
         pluginInterface.Create<Injections>();
-
-        Instance = this;
-
+        
         this.PluginInterface = pluginInterface;
         this.Configuration = this.PluginInterface.GetPluginConfig() as PluginConfig ?? new PluginConfig();
         this.Configuration.Initialize(this.PluginInterface);
-
-        this.WindowSystem = new WindowSystem(this.Name);
+        
+        this.WindowSystem = new WindowSystem("BatteryGauge");
+        this._settingsWindow = new SettingsWindow(this.Configuration);
+        this.WindowSystem.AddWindow(this._settingsWindow);
+        
         this.PluginInterface.UiBuilder.Draw += this.WindowSystem.Draw;
         this.PluginInterface.UiBuilder.OpenConfigUi += this.DrawConfigUI;
         
-        this.BatteryDtrBar = new BatteryDtrBar();
+        this.BatteryDtrBar = new BatteryDtrBar(this.Configuration, dtrBar);
     }
 
     public void Dispose() {
@@ -47,10 +45,6 @@ public class BatteryGauge : IDalamudPlugin {
     }
 
     private void DrawConfigUI() {
-        var instance = this.WindowSystem.Windows.Any(window => window.WindowName == SettingsWindow.WindowKey);
-        
-        if (!instance) {
-            this.WindowSystem.AddWindow(new SettingsWindow());
-        }
+        this._settingsWindow.Toggle();
     }
 }

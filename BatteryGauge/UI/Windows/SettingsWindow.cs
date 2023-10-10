@@ -28,26 +28,17 @@ public class SettingsWindow : Window {
         {DischargingDisplayMode.PercentageRuntime, "Show Percentage and Runtime"}
     };
 
-    private readonly BatteryGauge _plugin = BatteryGauge.Instance;
-    private readonly PluginConfig _config = BatteryGauge.Instance.Configuration;
+    private readonly PluginConfig _config;
 
-    public SettingsWindow() : base(WindowKey, ImGuiWindowFlags.None, true) {
-        this.IsOpen = true;
-
+    public SettingsWindow(PluginConfig config) : base(WindowKey, ImGuiWindowFlags.None, true) {
+        this._config = config;
+        
         this.SizeCondition = ImGuiCond.FirstUseEver;
         this.SizeConstraints = new WindowSizeConstraints {
             MinimumSize = new Vector2(350, 250),
             MaximumSize = new Vector2(350, 250)
         };
         this.Size = this.SizeConstraints.Value.MinimumSize;
-    }
-
-    public override void OnOpen() {
-
-    }
-
-    public override void OnClose() {
-        this._plugin.WindowSystem.RemoveWindow(this);
     }
     
     public override void Draw() {
