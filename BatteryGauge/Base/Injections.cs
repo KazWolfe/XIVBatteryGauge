@@ -13,6 +13,6 @@ namespace BatteryGauge.Base;
 
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
 public class Injections {
-    [PluginService] public static DalamudPluginInterface PluginInterface { get; private set; }
+    [PluginService] public static IDalamudPluginInterface PluginInterface { get; private set; }
     [PluginService] public static IPluginLog PluginLog { get; private set; }
 }

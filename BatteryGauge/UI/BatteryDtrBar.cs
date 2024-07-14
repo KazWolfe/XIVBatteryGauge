@@ -13,7 +13,7 @@ public class BatteryDtrBar : IDisposable {
     private const int BatteryPollMillis = 5_000;
     private const string DtrBarTitle = "BatteryGauge";
 
-    private readonly DtrBarEntry? _barEntry;
+    private readonly IDtrBarEntry? _barEntry;
     private readonly CancellationTokenSource _ts = new();
 
     private readonly PluginConfig _pluginConfig;
@@ -97,7 +97,7 @@ public class BatteryDtrBar : IDisposable {
 
     public void Dispose() {
         this._ts.Cancel();
-        this._barEntry?.Dispose();
+        this._barEntry?.Remove();
 
         GC.SuppressFinalize(this);
     }

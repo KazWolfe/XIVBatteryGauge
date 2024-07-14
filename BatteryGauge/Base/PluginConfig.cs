@@ -29,9 +29,9 @@ public class PluginConfig : IPluginConfiguration {
     public bool HideWhenFull = false;
 
     [NonSerialized]
-    private DalamudPluginInterface? _pluginInterface;
+    private IDalamudPluginInterface? _pluginInterface;
 
-    public void Initialize(DalamudPluginInterface @interface) {
+    public void Initialize(IDalamudPluginInterface @interface) {
         this._pluginInterface = @interface;
     }
 

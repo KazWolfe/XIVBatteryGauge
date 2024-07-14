@@ -10,14 +10,14 @@ using Dalamud.Plugin.Services;
 namespace BatteryGauge;
 
 public class BatteryGauge : IDalamudPlugin {
-    public DalamudPluginInterface PluginInterface { get; init; }
+    public IDalamudPluginInterface PluginInterface { get; init; }
     public PluginConfig Configuration { get; init; }
     public WindowSystem WindowSystem { get; init; }
 
     private BatteryDtrBar BatteryDtrBar { get; init; }
     private readonly SettingsWindow _settingsWindow;
 
-    public BatteryGauge(DalamudPluginInterface pluginInterface, IDtrBar dtrBar) {
+    public BatteryGauge(IDalamudPluginInterface pluginInterface, IDtrBar dtrBar) {
         pluginInterface.Create<Injections>();
         
         this.PluginInterface = pluginInterface;
