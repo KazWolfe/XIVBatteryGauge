@@ -1,24 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Dalamud.NET.Sdk/11.0.0">
     <PropertyGroup>
         <Product>Battery Gauge</Product>
         <Authors>Kaz Wolfe</Authors>
         <Company>Blacksite Technologies</Company>
-        <Version>1.2.0</Version>
+        <Version>1.2.1</Version>
         <AssemblyName>BatteryGauge</AssemblyName>
         <Description>A Dalamud plugin that shows battery information in-game.</Description>
         <Copyright>(c) 2023, KazWolfe</Copyright>
         <IsPackable>false</IsPackable>
         <NeutralLanguage>en</NeutralLanguage>
     </PropertyGroup>
-
-    <PropertyGroup>
-        <DalamudLibPath Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
-        <DalamudLibPath Condition="$([MSBuild]::IsOSPlatform('Linux'))">$(HOME)/.xlcore/dalamud/Hooks/dev/</DalamudLibPath>
-        <DalamudLibPath Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(HOME)/Library/Application Support/XIV on Mac/dalamud/Hooks/dev/</DalamudLibPath>
-        <DalamudLibPath Condition="$(DALAMUD_HOME) != ''">$(DALAMUD_HOME)/</DalamudLibPath>
-    </PropertyGroup>
-
-    <Import Project="$(DalamudLibPath)/targets/Dalamud.Plugin.targets"/>
 
     <ItemGroup>
         <Content Include="..\Assets\icon.png">
