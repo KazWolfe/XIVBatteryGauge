@@ -28,15 +28,13 @@ public class PluginConfig : IPluginConfiguration {
 
     public bool HideWhenFull = false;
 
-    [NonSerialized]
-    private IDalamudPluginInterface? _pluginInterface;
+    [NonSerialized] private IDalamudPluginInterface? _pluginInterface;
 
     public void Initialize(IDalamudPluginInterface @interface) {
         this._pluginInterface = @interface;
     }
 
     public void Save() {
-        Injections.PluginLog.Debug("Saving config");
-        this._pluginInterface!.SavePluginConfig(this);
+        this._pluginInterface?.SavePluginConfig(this);
     }
 }

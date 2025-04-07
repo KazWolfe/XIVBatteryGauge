@@ -7,6 +7,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Style;
 using Dalamud.Interface.Windowing;
+using Dalamud.Plugin;
 using ImGuiNET;
 
 namespace BatteryGauge.UI.Windows; 
@@ -29,9 +30,11 @@ public class SettingsWindow : Window {
     };
 
     private readonly PluginConfig _config;
+    private readonly IDalamudPluginInterface _pluginInterface;
 
-    public SettingsWindow(PluginConfig config) : base(WindowKey, ImGuiWindowFlags.None, true) {
+    public SettingsWindow(PluginConfig config, IDalamudPluginInterface @interface) : base(WindowKey, ImGuiWindowFlags.None, true) {
         this._config = config;
+        this._pluginInterface = @interface;
         
         this.SizeCondition = ImGuiCond.FirstUseEver;
         this.SizeConstraints = new WindowSizeConstraints {
@@ -87,7 +90,7 @@ public class SettingsWindow : Window {
             ImGui.EndCombo();
         }
 
-        if (Injections.PluginInterface.IsDev || Injections.PluginInterface.IsDevMenuOpen) {
+        if (this._pluginInterface.IsDev || this._pluginInterface.IsDevMenuOpen) {
             ImGui.Dummy(new Vector2(0, 10));
 
             ImGui.Text($"Battery Percentage: {SystemPower.ChargePercentage}%");

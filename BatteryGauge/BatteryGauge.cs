@@ -11,6 +11,7 @@ namespace BatteryGauge;
 
 public class BatteryGauge : IDalamudPlugin {
     public IDalamudPluginInterface PluginInterface { get; init; }
+    
     public PluginConfig Configuration { get; init; }
     public WindowSystem WindowSystem { get; init; }
 
@@ -18,14 +19,13 @@ public class BatteryGauge : IDalamudPlugin {
     private readonly SettingsWindow _settingsWindow;
 
     public BatteryGauge(IDalamudPluginInterface pluginInterface, IDtrBar dtrBar) {
-        pluginInterface.Create<Injections>();
-        
         this.PluginInterface = pluginInterface;
+        
         this.Configuration = this.PluginInterface.GetPluginConfig() as PluginConfig ?? new PluginConfig();
         this.Configuration.Initialize(this.PluginInterface);
         
         this.WindowSystem = new WindowSystem("BatteryGauge");
-        this._settingsWindow = new SettingsWindow(this.Configuration);
+        this._settingsWindow = new SettingsWindow(this.Configuration, this.PluginInterface);
         this.WindowSystem.AddWindow(this._settingsWindow);
         
         this.PluginInterface.UiBuilder.Draw += this.WindowSystem.Draw;
