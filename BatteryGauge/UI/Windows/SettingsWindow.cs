@@ -8,7 +8,7 @@ using Dalamud.Interface.Colors;
 using Dalamud.Interface.Style;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace BatteryGauge.UI.Windows; 
 
