@@ -1,9 +1,9 @@
-<Project Sdk="Dalamud.NET.Sdk/14.0.1">
+<Project Sdk="Dalamud.NET.Sdk/15.0.0">
     <PropertyGroup>
         <Product>Battery Gauge</Product>
         <Authors>Kaz Wolfe</Authors>
         <Company>Blacksite Technologies</Company>
-        <Version>1.2.5</Version>
+        <Version>1.2.6</Version>
         <AssemblyName>BatteryGauge</AssemblyName>
         <Description>A Dalamud plugin that shows battery information in-game.</Description>
         <Copyright>(c) 2023, KazWolfe. Licensed under AGPL 3.0 or later.</Copyright>
